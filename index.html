@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>¿Salimos?</title>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Animate.css -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
-  <!-- Sakura.js -->
+  <!-- Sakura -->
   <script src="https://cdn.jsdelivr.net/npm/sakura-js@1.0.2/lib/sakura.min.js"></script>
 
   <style>
@@ -22,6 +22,13 @@
       background-position: center;
       font-family: 'Georgia', serif;
       overflow-x: hidden;
+      transition: background-color 0.4s ease;
+    }
+
+    .dark-mode {
+      background-color: #121212 !important;
+      background-image: none !important;
+      color: #eee !important;
     }
 
     #sakura-canvas {
@@ -41,6 +48,7 @@
       height: 100vh;
       padding: 20px;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .side-text {
@@ -101,7 +109,6 @@
       margin-top: 20px;
     }
 
-    /* Botón "Sí" animación sutil */
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.07); }
@@ -110,19 +117,66 @@
     #btn-si {
       animation: pulse 2s infinite;
     }
+
+    .modo-icono {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 99999;
+      cursor: pointer;
+      background: white;
+      border-radius: 50%;
+      padding: 8px 12px;
+      font-size: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+      }
+
+      .side-text {
+        width: 100%;
+        font-size: 1rem;
+        margin: 10px 0;
+      }
+
+      .center-card {
+        width: 100%;
+        padding: 30px 20px;
+        font-size: 1rem;
+      }
+
+      .btn-lg {
+        font-size: 1rem;
+        padding: 10px 20px;
+        min-width: 120px;
+      }
+
+      .titulo {
+        font-size: 1.5rem;
+      }
+
+      .poema, .frases {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Modo noche -->
+  <div class="modo-icono" onclick="toggleDarkMode()">🌙</div>
 
   <div class="layout">
-    <!-- Frases Izquierda -->
     <div class="side-text">
       🌷 Me pregunté si alguien tan linda también creería en las casualidades...<br><br>
       🍃 Te vi sonreír sin darte cuenta, y ahí supe que quería invitarte a algo más que un café.<br><br>
       ✨ A veces los silencios dicen más. Tal vez, uno compartido contigo sea mi nuevo favorito.
     </div>
 
-    <!-- Tarjeta central -->
     <div class="center-card animate__animated animate__fadeInDown">
       <div class="titulo">¿Te gustaría salir a dar una vuelta o tomar un café conmigo?</div>
 
@@ -153,7 +207,6 @@
       </div>
     </div>
 
-    <!-- Frases Derecha -->
     <div class="side-text">
       💌 ¿Sabes qué me inspiró a escribir esto?<br>Podría contártelo… pero mejor te lo digo en persona.<br><br>
       🌙 Si aceptas, prometo que no será la típica cita. Será mejor: será nuestra.<br><br>
@@ -171,9 +224,7 @@
         </div>
         <div class="modal-body text-center">
           <p>Porque a veces los detalles valen más que mil palabras...</p>
-          <img src="https://cdn.pixabay.com/animation/2024/02/02/08/37/08-37-53-653_512.gif"
-               class="img-fluid rounded shadow"
-               alt="Regalo romántico">
+          <img src="https://cdn.pixabay.com/animation/2024/02/02/08/37/08-37-53-653_512.gif" class="img-fluid rounded shadow" alt="Regalo romántico">
         </div>
       </div>
     </div>
@@ -202,7 +253,6 @@
     </div>
   </div>
 
-  <!-- Frase tipo carta anónima -->
   <p style="color:#4b2c20;text-align:center;margin-top:30px;font-style:italic;">
     P.D.: No tienes que decir sí… pero si te hizo sonreír, ya valió la pena.
   </p>
@@ -210,7 +260,7 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Efecto Sakura
+    // Sakura
     window.addEventListener("DOMContentLoaded", function () {
       const sakura = new Sakura(document.body, {
         maxSize: 12,
@@ -228,22 +278,16 @@
     const btnNo = document.getElementById('btn-no');
     const btnSi = document.getElementById('btn-si');
     const linkWhatsapp = document.getElementById('link-whatsapp');
-
     const numeroWhatsapp = '51918280165';
     const mensaje = 'Hola, acepto tu invitación 😊 ¿Cuándo nos vemos?';
 
     let huirActivo = true;
-    setTimeout(() => {
-      huirActivo = false;
-    }, 5 * 60 * 1000);
+    setTimeout(() => { huirActivo = false; }, 5 * 60 * 1000);
 
     document.addEventListener("mousemove", (e) => {
       if (!huirActivo) return;
       const rect = btnNo.getBoundingClientRect();
-      const distancia = Math.hypot(
-        rect.left + rect.width / 2 - e.clientX,
-        rect.top + rect.height / 2 - e.clientY
-      );
+      const distancia = Math.hypot(rect.left + rect.width / 2 - e.clientX, rect.top + rect.height / 2 - e.clientY);
       if (distancia < 100) moverBotonNo();
     });
 
@@ -270,6 +314,11 @@
       btnSi.disabled = false;
       btnSi.innerText = "Sí, me encantaría";
     });
+
+    // Modo oscuro
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
   </script>
 </body>
 </html>
